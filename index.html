@@ -47,9 +47,19 @@ header{background:#fff;color:var(--txt);padding:14px 18px;display:flex;justify-c
 header .t{font-weight:700;letter-spacing:.06em;color:var(--shu)}
 header button{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer}
 main{padding:18px;max-width:720px;margin:0 auto;padding-bottom:40px}
-.panel{background:#fff;border-radius:12px;padding:18px;margin-bottom:14px;border:1px solid var(--line);box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.panel{background:#fff;border-radius:12px;padding:18px;margin-bottom:14px;border:1px solid var(--line);box-shadow:0 2px 8px rgba(0,0,0,.04);overflow-wrap:break-word;word-break:break-word}
+.table-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.faq-item{border-bottom:1px solid var(--line)}
+.faq-item:last-child{border-bottom:none}
+.faq-q{width:100%;text-align:left;background:none;border:none;padding:14px 2px;font-size:15px;font-weight:600;color:var(--txt);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq-q:active{color:var(--shu)}
+.faq-arrow{color:var(--ki-dark);font-weight:700;font-size:18px;flex-shrink:0}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .25s ease,padding .25s ease;font-size:14px;color:var(--muted);line-height:1.7}
+.faq-a.open{max-height:400px;padding:0 2px 14px}
 .panel h2{font-size:14px;color:var(--sumi);border-left:4px solid var(--shu);padding-left:8px;margin-bottom:12px}
-.kv{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.kv>span:first-child{min-width:0;overflow-wrap:break-word;word-break:break-word}
+.kv>span:last-child{flex-shrink:0;text-align:right}
 .kv:last-child{border:none}
 .kv .k{color:var(--muted)}
 .badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:11px;font-weight:700}
@@ -68,6 +78,7 @@ main{padding:18px;max-width:720px;margin:0 auto;padding-bottom:40px}
 /* 打刻ホーム */
 .clock-now{text-align:center;padding:10px 0 4px}
 .clock-now .tm{font-size:44px;font-weight:700;letter-spacing:.04em;font-variant-numeric:tabular-nums;color:var(--shu)}
+.clock-now .tm .sec{font-size:24px;color:var(--muted);font-weight:600}
 .clock-now .dt{font-size:13px;color:var(--muted)}
 .store-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0 4px}
 .store-chips button{padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-size:14px;cursor:pointer;color:var(--muted)}
@@ -86,9 +97,9 @@ main{padding:18px;max-width:720px;margin:0 auto;padding-bottom:40px}
 .month-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .month-nav button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 16px;font-size:14px;cursor:pointer}
 .month-nav .m{font-weight:700;font-size:16px}
-table.att{width:100%;border-collapse:collapse;font-size:13px}
-table.att th{color:var(--muted);font-weight:600;text-align:left;padding:6px 4px;border-bottom:1.5px solid var(--line)}
-table.att td{padding:8px 4px;border-bottom:1px solid var(--line)}
+table.att{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+table.att th{color:var(--muted);font-weight:600;text-align:left;padding:6px 3px;border-bottom:1.5px solid var(--line);white-space:nowrap}
+table.att td{padding:8px 3px;border-bottom:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 table.att tr.tappable{cursor:pointer}
 table.att tr.tappable:active{background:var(--ki-soft)}
 .att .st{display:block;font-size:10px;color:var(--muted)}
@@ -109,7 +120,8 @@ table.att tr.tappable:active{background:var(--ki-soft)}
 .emp-row{display:flex;justify-content:space-between;align-items:center;padding:12px 4px;border-bottom:1px solid var(--line);cursor:pointer}
 .emp-row:active{background:var(--ki-soft)}
 .emp-row .nm{font-weight:600}
-.emp-row .sb{font-size:12px;color:var(--muted)}
+.emp-row .sb{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.emp-row>div:first-child{min-width:0;flex:1}
 .searchbar{margin-bottom:12px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
 @media(max-width:480px){.grid2{grid-template-columns:1fr}}
@@ -266,7 +278,7 @@ async function doChangePw() {
 async function doLogout(){ try{await api('logout');}catch(e){} resetToLogin(); }
 
 /* ---------- 画面構成(ハンバーガーメニュー) ---------- */
-const MENU_ICONS = { punch:'⏱', att:'📋', leave:'🌴', appr:'✅', admin:'⚙️', my:'👤' };
+const MENU_ICONS = { punch:'⏱', att:'📋', leave:'🌴', appr:'✅', admin:'⚙️', faq:'❓', my:'👤' };
 let MENU_TABS = [];
 
 function enterApp() {
@@ -274,6 +286,7 @@ function enterApp() {
   const tabs = [{ id: 'punch', label: '打刻' }, { id: 'att', label: '勤怠' }, { id: 'leave', label: '有給' }];
   if (ME.role === '承認者' || ME.role === '管理者') tabs.push({ id: 'appr', label: '承認' });
   if (ME.role === '管理者') tabs.push({ id: 'admin', label: '管理' });
+  tabs.push({ id: 'faq', label: 'よくある質問' });
   tabs.push({ id: 'my', label: 'マイページ' });
   MENU_TABS = tabs;
   // ドロワーの中身
@@ -299,6 +312,7 @@ function go(view) {
   if (view === 'leave') renderLeave();
   if (view === 'appr') renderApprovals('corr');
   if (view === 'admin') renderAdmin('emps');
+  if (view === 'faq') renderFaq();
   if (view === 'my') renderMe();
 }
 
@@ -332,7 +346,8 @@ async function renderPunch() {
     const n = new Date();
     const el = document.getElementById('nowTm');
     if (!el) return;
-    el.textContent = ('0'+n.getHours()).slice(-2) + ':' + ('0'+n.getMinutes()).slice(-2);
+    el.innerHTML = ('0'+n.getHours()).slice(-2) + ':' + ('0'+n.getMinutes()).slice(-2) +
+      '<span class="sec">:' + ('0'+n.getSeconds()).slice(-2) + '</span>';
     document.getElementById('nowDt').textContent =
       `${n.getFullYear()}年${n.getMonth()+1}月${n.getDate()}日(${'日月火水木金土'[n.getDay()]})`;
   };
@@ -424,7 +439,7 @@ async function renderAttendance() {
     <div class="panel">
       <h2>日別勤怠(タップで修正依頼)</h2>
       ${aj.days.length ? `
-      <table class="att">
+      <div class="table-wrap"><table class="att">
         <tr><th>日付</th><th>出勤</th><th>退勤</th><th>休憩</th><th>労働</th><th></th></tr>
         ${aj.days.map(d => `
           <tr class="tappable" onclick="openCorrection('${d.date}','${d.in}','${d.out}','${esc(d.store)}')">
@@ -434,7 +449,7 @@ async function renderAttendance() {
             <td>${Math.floor(d.workMin/60)}:${('0'+d.workMin%60).slice(-2)}</td>
             <td>${corrByDate[d.date] ? '<span class="badge wait">申請中</span>' : ''}</td>
           </tr>`).join('')}
-      </table>` : '<p class="hint">この月の勤怠記録はありません。</p>'}
+      </table></div>` : '<p class="hint">この月の勤怠記録はありません。</p>'}
       <button class="btn btn-ghost" onclick="openCorrection('','','','')">打刻修正</button>
     </div>
     ${corrs.length ? `
@@ -518,7 +533,7 @@ async function renderLeave() {
       <label>理由(任意)</label>
       <input id="lvReason" placeholder="例: 私用のため">
       <button class="btn btn-primary" onclick="sendLeave()">申請する</button>
-      <p class="hint">承認されると残日数から差し引かれます(半休は0.5日)。</p>
+      <p class="hint">有給は取得希望日の<b>7日前まで</b>に申請してください(就業規則)。承認されると残日数から差し引かれます(半休は0.5日)。</p>
     </div>
     ${j.requests.length ? `
     <div class="panel">
@@ -527,6 +542,12 @@ async function renderLeave() {
         <div class="kv"><span>${r.date}(${r.kind})${r.reason?`<br><span class="hint">${esc(r.reason)}</span>`:''}${r.status==='否認'?`<br><span class="hint" style="color:var(--shu)">否認理由: ${esc(r.rejectReason)}</span>`:''}</span>
         <span class="badge ${r.status==='承認'?'on':r.status==='否認'?'ng':'wait'}">${r.status}</span></div>`).join('')}
     </div>` : ''}`;
+
+  // 取得日の最小値を7日後に設定(カレンダー上でも直前を選べないようにする)
+  const minD = new Date(Date.now() + 7 * 86400000);
+  const mm = minD.getFullYear() + '-' + ('0'+(minD.getMonth()+1)).slice(-2) + '-' + ('0'+minD.getDate()).slice(-2);
+  const lvDateEl = document.getElementById('lvDate');
+  if (lvDateEl) lvDateEl.min = mm;
 }
 async function sendLeave() {
   const date = document.getElementById('lvDate').value;
@@ -627,6 +648,42 @@ async function decide(reqId, approve) {
 }
 
 /* ---------- マイページ ---------- */
+/* ---------- よくある質問(FAQ) ---------- */
+const FAQ_ITEMS = [
+  { q: 'ログインできません', a: 'メールアドレスとパスワードをご確認ください。初めての方は会社から案内された初期パスワードでログインします。パスワードを忘れた場合は店舗責任者に初期化を依頼してください(初期パスワードに戻ります)。5回連続で失敗すると15分ロックされます。' },
+  { q: '打刻を押し間違えた / 打刻を忘れた', a: '「勤怠」画面で対象日をタップするか「打刻修正」ボタンから修正依頼を出せます。理由を添えて申請すると、承認者が確認して反映します。記録の無い日(打刻忘れ)も同じ方法で申請できます。' },
+  { q: '複数店舗で働いています。打刻はどうする?', a: '打刻画面の上部に店舗の選択ボタンが出ます。その日の勤務店舗を選んでから打刻してください。休憩・退勤は自動的に出勤時の店舗に紐づくので、途中で選び直す必要はありません。' },
+  { q: '深夜0時をまたいで働いた場合は?', a: 'そのまま退勤を押してください。朝9時前の退勤・休憩打刻は、前日に出勤記録があれば自動的に前日の勤務として記録されます。' },
+  { q: '有給はいつまでに申請すればいい?', a: '取得希望日の7日前までに「有給」画面から申請してください(就業規則)。それより直前の日付はカレンダーで選べません。急なご事情(体調不良など)の場合は店舗責任者にご相談ください。' },
+  { q: '有給の残日数はどこで見られる?', a: '「有給」画面の上部に残日数が大きく表示されます。付与日ごとの残数と有効期限も確認できます。有効期限は付与日から2年です。' },
+  { q: '半休は取れますか?', a: '取れます。有給申請時に区分で「半休」を選ぶと0.5日として消化されます。' },
+  { q: 'パスワードを変更したい', a: '「マイページ」からいつでも変更できます(8文字以上)。' },
+  { q: '給与明細はどこで見られる?', a: '給与締め・明細機能は現在準備中です。実装後、この画面からご案内します。' },
+];
+function renderFaq() {
+  const area = document.getElementById('mainArea');
+  area.innerHTML = `
+    <div class="panel">
+      <h2>よくある質問</h2>
+      <div id="faqList">${FAQ_ITEMS.map((f, i) => `
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(${i})">
+            <span>${esc(f.q)}</span><span class="faq-arrow" id="faqArrow${i}">＋</span>
+          </button>
+          <div class="faq-a" id="faqA${i}">${esc(f.a)}</div>
+        </div>`).join('')}</div>
+    </div>
+    <div class="panel" style="text-align:center;color:var(--muted);font-size:13px">
+      解決しない場合は店舗責任者または本部までお問い合わせください。
+    </div>`;
+}
+function toggleFaq(i) {
+  const a = document.getElementById('faqA' + i);
+  const ar = document.getElementById('faqArrow' + i);
+  const open = a.classList.toggle('open');
+  ar.textContent = open ? '−' : '＋';
+}
+
 function renderMe() {
   document.getElementById('hdrTitle').textContent = 'マイページ';
   document.getElementById('mainArea').innerHTML = `
